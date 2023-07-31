@@ -170,7 +170,7 @@ function DrawerExample() {
     noMeja: '',
     option: 'dinein', // Default value for the "Choose an Option" select
     orderNote: '',
-    feedback: ''
+    email: ''
   })
   const handleChange = e => {
     const { name, value } = e.target
@@ -250,63 +250,22 @@ function DrawerExample() {
                   <OrderItem key={index} item={item} /> // Use index as the key prop
                 ))}
                 <FormLabel htmlFor="option">You May Like :</FormLabel>
-                <Box flex={1}>
-                  <Carousel
-                    draggable={false}
-                    responsive={responsive}
-                    ssr={true}
-                    itemClass="carousel-item-padding-40-px"
-                  >
-                    {recommendationItems.map((data, index) =>
-                      // Step 2: Use map function to loop through the array and create a box with text
-                      foodCard(
-                        data.nama,
-                        data.harga,
-                        data.jenis,
-                        data.url,
-                        data.totalp,
-                        data.disukai,
-                        index
-                      )
-                    )}
-                  </Carousel>
 
-                  {/* Rest of the left side content */}
-                </Box>
                 <Box>
-                  <FormLabel htmlFor="desc">Nama</FormLabel>
+                  <FormLabel htmlFor="desc">Nama Pembeli</FormLabel>
                   <Input name="nama" onChange={handleChange} />
                 </Box>
-                <Flex>
-                  <Box maxW={'30%'}>
-                    <FormLabel htmlFor="option">No Meja</FormLabel>
-                    <Input name="noMeja" onChange={handleChange} />
-                  </Box>
-                  <Box pl={5}>
-                    <FormLabel htmlFor="option">Choose an Option</FormLabel>
-                    <Select
-                      id="option"
-                      name="option"
-                      defaultValue="dinein"
-                      onChange={handleChange}
-                    >
-                      <option value="dinein">Dine In</option>
-                      <option value="takeaway">Take Away</option>
-                    </Select>
-                  </Box>
-                </Flex>
-
                 <Box>
-                  <FormLabel htmlFor="desc">Order Note</FormLabel>
+                  <FormLabel htmlFor="desc">Email Pembeli</FormLabel>
+                  <Input name="email" onChange={handleChange} />
+                </Box>
+                <Box>
+                  <FormLabel htmlFor="desc"> Note</FormLabel>
                   <Textarea
                     id="desc"
                     name="orderNote"
                     onChange={handleChange}
                   />
-                </Box>
-                <Box>
-                  <FormLabel htmlFor="desc">Feedback</FormLabel>
-                  <Textarea id="desc" name="feedback" onChange={handleChange} />
                 </Box>
 
                 <Box

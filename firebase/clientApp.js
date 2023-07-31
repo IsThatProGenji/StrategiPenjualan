@@ -10,27 +10,19 @@ import {
 } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { Tab } from 'react-md'
-const firebaseConfig = {
-  apiKey: 'AIzaSyDE-1OZl0wNOQxxrZST194KD3U1kLW9Qy4',
-  authDomain: 'restaurant-7305c.firebaseapp.com',
-  projectId: 'restaurant-7305c',
-  storageBucket: 'restaurant-7305c.appspot.com',
-  messagingSenderId: '872390095470',
-  appId: '1:872390095470:web:ef12a7ed5bfe5d2ddd2c7f',
-  measurementId: 'G-9DGLGTQ0X0'
-}
+import firebaseConfig from '../components/firebaseConfig'
 
 async function getCities() {
   const app = initializeApp(firebaseConfig)
   const db = getFirestore(app)
-  var foodName = 'Brown Sugar Iced Coffe'
+  var foodName = 'Correction Tape V-tec Kecil'
   try {
-    const docRef = await addDoc(collection(db, 'minuman'), {
+    const docRef = await addDoc(collection(db, 'item'), {
       nama: foodName,
-      jenis: ['Dingin'],
-      harga: 14500,
-      totalp: 15,
-      disukai: 2
+      kode: 'A118',
+      totalp: 9,
+      harga: 3000,
+      url: 'https://firebasestorage.googleapis.com/v0/b/strategipenjualan-b6f42.appspot.com/o/Correction%20Tape%20V-tec%20Kecil.jpg?alt=media&token=0fc778e9-0fdf-4c80-88d8-1c47b41a3a6e'
     })
     console.log('Document written with ID: ', docRef.id)
     console.log(foodName)
@@ -87,4 +79,4 @@ async function GetMenu() {
   console.log(items)
   return items
 }
-export default submitOrder
+export default getCities

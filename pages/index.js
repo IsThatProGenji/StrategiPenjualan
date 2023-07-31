@@ -9,13 +9,14 @@ import {
   Badge,
   IconButton,
   Img,
-  Button
+  Button,
+  Text
 } from '@chakra-ui/react'
 import { ChevronRightIcon, EmailIcon, StarIcon } from '@chakra-ui/icons'
 import NumberInput from '../components/numberinput'
 import Layout from '../components/layouts/article'
 import Section from '../components/section'
-
+import getCities from '../firebase/clientApp'
 import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
 import MyContext from '../components/myContext'
@@ -135,7 +136,7 @@ function Home() {
 
   // Function to render NumberInput if orders are not null
 
-  function foodCard(nama, harga, jenis, url, totalp, disukai, index) {
+  function foodCard(nama, harga, url, totalp, kode, index) {
     const property = {
       imageUrl: url,
       imageAlt: 'food katsu',
@@ -143,13 +144,7 @@ function Home() {
       formattedPrice: harga
     }
     const handleSubmit = () => {
-      addOrder(
-        property.title,
-        property.formattedPrice,
-        property.imageUrl,
-        1,
-        jenis
-      )
+      addOrder(property.title, property.formattedPrice, property.imageUrl, 1)
 
       // console.log(orders)
     }
@@ -157,7 +152,7 @@ function Home() {
       const hasTitle = orders.some(order => order.nama === property.title)
       if (!hasTitle) {
         return (
-          <Button borderRadius="full" size="sm" onClick={handleSubmit}>
+          <Button borderRadius="md" size="sm" onClick={handleSubmit}>
             Add To Cart
           </Button>
         )
@@ -170,32 +165,29 @@ function Home() {
       }
     }
     return (
-      <Box key={index} paddingX={{ base: 1, md: 2 }}>
-        <Box borderWidth="2px" borderRadius="lg" overflow="hidden">
-          <Img
-            src={property.imageUrl}
-            alt={property.imageAlt}
-            borderRadius="lg"
-            objectFit="cover"
-          />
+      <Box key={index} paddingX={{ base: 1, md: 2 }} width="100%" py={2}>
+        <Box borderWidth="2px" borderRadius="none">
+          <Box
+            // Set the desired height for the image container
+            borderRadius="none"
+            overflow="hidden"
+            position="relative"
+            pb="56.25%" // 16:9 aspect ratio, you can adjust this value as needed
+          >
+            <Box
+              as="img"
+              src={property.imageUrl}
+              alt={property.imageAlt}
+              position="absolute"
+              top="0"
+              left="0"
+              width="100%"
+              height="100%"
+              objectFit="cover"
+            />
+          </Box>
 
           <Box p={5}>
-            <Box display="flex" alignItems="baseline" noOfLines={1}>
-              {jenis.map((item, index) => (
-                <Badge
-                  borderRadius="full"
-                  px="2"
-                  colorScheme={
-                    index === 0 ? 'teal' : index === 1 ? 'red' : 'purple'
-                  }
-                  key={index}
-                  mr={2}
-                >
-                  {jenis[index]}
-                </Badge>
-              ))}
-            </Box>
-
             <Box
               mt="1"
               fontWeight="semibold"
@@ -210,7 +202,7 @@ function Home() {
 
             <Box display="flex" mt="2" alignItems="center" pb={2}>
               <Box as="span" color="gray.600" fontSize="xs" noOfLines={1}>
-                {totalp} terjual | Disukai {disukai}
+                {totalp} terjual
               </Box>
             </Box>
             {renderInputOrButton()}
@@ -220,19 +212,7 @@ function Home() {
     )
   }
 
-  const {
-    someValue,
-    updateContextValue,
-    GetFullMenu,
-    fullMenu,
-    topSeller,
-    favorite,
-    filteredItems,
-    recommendationItems,
-    GetFullDrink,
-    fullDrink,
-    promo
-  } = useContext(MyContext)
+  const { GetFullMenu, fullMenu } = useContext(MyContext)
   const [newValue, setNewValue] = useState('')
 
   const handleChange = event => {
@@ -240,14 +220,14 @@ function Home() {
   }
 
   const handleSubmit = () => {
-    updateContextValue(newValue)
+    // getCities()
   }
 
   const [seasonal, setSeasonal] = useState([])
 
   useEffect(() => {
     GetFullMenu()
-    GetFullDrink()
+
     // const newItem = { firstname: 'Kaylee', lastname: 'Frye' }
     // setItems(prevItems => [...prevItems, newItem])
     // console.log(items)
@@ -255,11 +235,6 @@ function Home() {
 
   return (
     <Layout>
-      {/* <div>
-        <div>Current Value: {someValue}</div>
-        <input type="text" value={newValue} onChange={handleChange} />
-        <button onClick={handleSubmit}>Update Value</button>
-      </div> */}
       {/* <div>
         {' '}
         {recommendationItems.map(
@@ -269,126 +244,6 @@ function Home() {
         )}
       </div> */}
       <Container maxW="x1" flexDirection="row">
-        {/* Left Carousel */}
-        <Section delay={0.4}>
-          <Flex pt={5} direction={{ base: 'column', md: 'row' }}>
-            {/* Left Carousel */}
-            <Box flex={1} px={2} w={{ base: '100%', md: '50%' }}>
-              <Heading as="h3" variant="section-title" pl={2}>
-                Top Seller
-              </Heading>
-              <Carousel
-                // swipeable={false}
-                draggable={false}
-                responsive={responsive}
-                ssr={true}
-                itemClass="carousel-item-padding-40-px"
-              >
-                {topSeller.map((data, index) =>
-                  // Step 2: Use map function to loop through the array and create a box with text
-                  foodCard(
-                    data.nama,
-                    data.harga,
-                    data.jenis,
-                    data.url,
-                    data.totalp,
-                    data.disukai,
-                    index
-                  )
-                )}
-              </Carousel>
-
-              {/* Rest of the left side content */}
-            </Box>
-
-            {/* Right Carousel */}
-            <Box flex={1} w={{ base: '100%', md: '50%' }} px={2}>
-              <Heading as="h3" variant="section-title" pl={2}>
-                Favorite
-              </Heading>
-              <Carousel
-                responsive={responsive}
-                draggable={false}
-                ssr={true}
-                itemClass="carousel-item-padding-40-px"
-              >
-                {favorite.map((data, index) =>
-                  // Step 2: Use map function to loop through the array and create a box with text
-                  foodCard(
-                    data.nama,
-                    data.harga,
-                    data.jenis,
-                    data.url,
-                    data.totalp,
-                    data.disukai,
-                    index
-                  )
-                )}
-              </Carousel>
-
-              {/* Rest of the right side content */}
-            </Box>
-          </Flex>
-        </Section>
-        <Section delay={0.5}>
-          <Flex pt={5} direction={{ base: 'column', md: 'row' }}>
-            {/* Left Carousel */}
-            <Box flex={1} px={2} w={{ base: '100%', md: '50%' }}>
-              <Heading as="h3" variant="section-title" pl={2}>
-                Seasonal Menu
-              </Heading>
-              <Carousel
-                draggable={false}
-                responsive={responsive}
-                ssr={true}
-                itemClass="carousel-item-padding-40-px"
-              >
-                {filteredItems.map((data, index) =>
-                  // Step 2: Use map function to loop through the array and create a box with text
-                  foodCard(
-                    data.nama,
-                    data.harga,
-                    data.jenis,
-                    data.url,
-                    data.totalp,
-                    data.disukai,
-                    index
-                  )
-                )}
-              </Carousel>
-
-              {/* Rest of the left side content */}
-            </Box>
-
-            {/* Right Carousel */}
-            <Box flex={1} w={{ base: '100%', md: '50%' }} px={2}>
-              <Heading as="h3" variant="section-title" pl={2}>
-                Promo Deals
-              </Heading>
-              <Carousel
-                draggable={false}
-                responsive={responsive}
-                ssr={true}
-                itemClass="carousel-item-padding-40-px"
-              >
-                {promo.map((data, index) =>
-                  // Step 2: Use map function to loop through the array and create a box with text
-                  foodCard(
-                    data.nama,
-                    data.harga,
-                    data.jenis,
-                    data.url,
-                    data.totalp,
-                    data.disukai,
-                    index
-                  )
-                )}
-              </Carousel>
-
-              {/* Rest of the right side content */}
-            </Box>
-          </Flex>
-        </Section>
         <Box
           flex={1}
           px={2}
@@ -396,39 +251,15 @@ function Home() {
           flexDirection="column"
           alignItems="center"
         >
-          <Heading as="h3" variant="section-title" pl={2}>
-            Makanan
-          </Heading>
+          <Text as="h1" fontSize="xl" fontWeight="bold" p={2}>
+            Produk
+          </Text>
           <SimpleGrid columns={{ base: 2, sm: 3, md: 4, lg: 6 }} spacing={2}>
             {fullMenu.map((data, index) =>
               foodCard(
                 data.nama,
                 data.harga,
-                data.jenis,
-                data.url,
-                data.totalp,
-                data.disukai,
-                index
-              )
-            )}
-          </SimpleGrid>
-        </Box>
-        <Box
-          flex={1}
-          px={2}
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-        >
-          <Heading as="h3" variant="section-title" pl={2}>
-            Minuman
-          </Heading>
-          <SimpleGrid columns={{ base: 2, sm: 3, md: 4, lg: 6 }} spacing={2}>
-            {fullDrink.map((data, index) =>
-              foodCard(
-                data.nama,
-                data.harga,
-                data.jenis,
+
                 data.url,
                 data.totalp,
                 data.disukai,
