@@ -30,27 +30,43 @@ async function getCities() {
     console.error('Error adding document: ', e)
   }
 }
+export async function SendEmail({ to, subject, html }) {
+  const app = initializeApp(firebaseConfig)
+  const db = getFirestore(app)
 
-async function submitOrder({
-  order,
-  nama,
-  nomeja,
-  opsi,
-  note,
-  feedback,
-  total
-}) {
+  console.log('to:', to)
+  console.log('subject:', subject)
+  console.log('html:', html)
+  try {
+    const docRef = await addDoc(collection(db, 'mail'), {
+      to: to,
+      message: {
+        subject: subject,
+        html: html
+      }
+    })
+    console.log('Document written with ID: ', docRef.id)
+  } catch (e) {
+    console.error('Error adding document: ', e)
+  }
+}
+async function submitOrder({ order, nama, note, email, total }) {
   const app = initializeApp(firebaseConfig)
   const db = getFirestore(app)
   const currentDate = new Date()
+
+  console.log('order:', order)
+  console.log('nama:', nama)
+  console.log('note:', note)
+  console.log('email:', email)
+  console.log('total:', total)
+  console.log('date:', currentDate)
   try {
     const docRef = await addDoc(collection(db, 'order'), {
       nama: nama,
       order: order,
-      nomeja: nomeja,
-      opsi: opsi,
       note: note,
-      feedback: feedback,
+      email: email,
       total: total,
       date: currentDate
     })
@@ -59,7 +75,6 @@ async function submitOrder({
     console.error('Error adding document: ', e)
   }
 }
-
 async function GetMenu() {
   const [items, setItems] = useState()
   const app = initializeApp(firebaseConfig)
@@ -79,4 +94,4 @@ async function GetMenu() {
   console.log(items)
   return items
 }
-export default getCities
+export default submitOrder

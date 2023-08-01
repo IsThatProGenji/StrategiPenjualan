@@ -51,6 +51,7 @@ function NumberInput({ nama }) {
           aria-label="Call Segun"
           icon={<LuTrash2 />}
           size={'sm'}
+          borderRadius={'full'}
           onClick={handleDelete}
         />
       ) : (
@@ -58,6 +59,7 @@ function NumberInput({ nama }) {
           aria-label="Call Segun"
           icon={<LuMinus />}
           size={'sm'}
+          borderRadius={'full'}
           onClick={handleDecrement}
         />
       )}
@@ -65,10 +67,12 @@ function NumberInput({ nama }) {
         size={'sm'}
         value={order != null ? order.jumlah : 0}
         onChange={handleInputChange}
+        borderRadius={'full'}
         min={0}
       />
 
       <IconButton
+        borderRadius={'full'}
         aria-label="Call Segun"
         icon={<LuPlus />}
         size={'sm'}

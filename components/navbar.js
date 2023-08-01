@@ -13,7 +13,8 @@ import {
   MenuList,
   MenuButton,
   IconButton,
-  useColorModeValue
+  useColorModeValue,
+  Button
 } from '@chakra-ui/react'
 import { HamburgerIcon } from '@chakra-ui/icons'
 import ThemeToggleButton from './theme-toggle-button'
@@ -52,60 +53,36 @@ const Navbar = props => {
       as="nav"
       w="100%"
       bg={useColorModeValue('#ffffff40', '#20202380')}
-      css={{ backdropFilter: 'blur(10px)' }}
       zIndex={2}
       {...props}
     >
       <Container
         display="flex"
         p={2}
-        maxW="2x1"
+        maxW="100%"
         wrap="wrap"
-        align="center"
-        justify="space-between"
+        justifyContent={'center'}
+
+        // Center the content horizontally
       >
-        <Flex align="center" mr={0}>
+        <Flex align="center" mr={5}>
           <Heading as="h1" size="lg" letterSpacing={'tighter'}>
             <Logo />
           </Heading>
         </Flex>
 
-        <Stack
-          direction={{ base: 'column', md: 'row' }}
-          display={{ base: 'none', md: 'flex' }}
-          width={{ base: 'full', md: 'auto' }}
-          alignItems="center"
-          flexGrow={1}
-          mt={{ base: 4, md: 0 }}
+        <Button
+          as="a" // Render the Button as an anchor tag to mimic the link behavior
+          href="/login"
+          fontSize="16px"
+          fontWeight="bold"
+          colorScheme="purple"
+          marginRight={3}
         >
-          <LinkItem href="/admin" path={path}>
-            Admin
-          </LinkItem>
-          <LinkItem href="/posts" path={path}>
-            Posts
-          </LinkItem>
-          <LinkItem href="https://uses.craftz.dog/">Uses</LinkItem>
-          <LinkItem
-            target="_blank"
-            href="https://github.com/craftzdog/craftzdog-homepage"
-            path={path}
-            display="inline-flex"
-            alignItems="center"
-            style={{ gap: 4 }}
-            pl={2}
-          >
-            <IoLogoGithub />
-            Source
-          </LinkItem>
-        </Stack>
-
-        <Box flex={1} align="right">
-          <ThemeToggleButton mr={2} />
-
-          <Box ml={2} display={{ base: 'inline-block' }}>
-            <DrawerExample />
-          </Box>
-
+          Admin
+        </Button>
+        <DrawerExample />
+        <Box ml={2} display={{ base: 'inline-block' }}>
           <Box ml={2} display={{ base: 'inline-block', md: 'none' }}>
             <Menu isLazy id="navbar-menu">
               <MenuButton

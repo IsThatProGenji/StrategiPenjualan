@@ -27,7 +27,6 @@ const Logo = () => {
   return (
     <Link href="/" scroll={false}>
       <LogoBox>
-        <Image src={printimg} width={20} height={20} />
         <Text
           color={useColorModeValue('gray.800', 'whiteAlpha.900')}
           fontFamily='M PLUS Rounded 1c", sans-serif'
@@ -35,7 +34,7 @@ const Logo = () => {
           ml={3}
           fontSize="xs"
         >
-          Atok Rizal Jagonya Sate
+          Arka Multi Synergi
         </Text>
       </LogoBox>
     </Link>

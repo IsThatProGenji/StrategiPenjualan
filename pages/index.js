@@ -16,7 +16,7 @@ import { ChevronRightIcon, EmailIcon, StarIcon } from '@chakra-ui/icons'
 import NumberInput from '../components/numberinput'
 import Layout from '../components/layouts/article'
 import Section from '../components/section'
-import getCities from '../firebase/clientApp'
+import SendEmail from '../firebase/clientApp'
 import Carousel from 'react-multi-carousel'
 import 'react-multi-carousel/lib/styles.css'
 import MyContext from '../components/myContext'
@@ -54,81 +54,6 @@ const responsive = {
   }
 }
 
-function AirbnbCard() {
-  const property = {
-    imageUrl:
-      'https://firebasestorage.googleapis.com/v0/b/restaurant-7305c.appspot.com/o/Ayam%20Katsu.jpg?alt=media&token=d53dbb75-69e9-4dbb-8e47-e4426c096b48',
-    imageAlt: 'food katsu',
-    beds: 3,
-    baths: 2,
-    title: 'Modern home in city center in the heart of historic Los Angeles',
-    formattedPrice: '$1,900.00',
-    reviewCount: 34,
-    rating: 4
-  }
-
-  return (
-    <Box paddingX={{ base: 1, md: 2 }}>
-      <Box borderWidth="1px" borderRadius="lg" overflow="hidden">
-        <Img
-          src={property.imageUrl}
-          alt={property.imageAlt}
-          borderRadius="lg"
-        />
-
-        <Box p="6">
-          <Box display="flex" alignItems="baseline">
-            <Badge borderRadius="full" px="2" colorScheme="teal">
-              New
-            </Badge>
-            <Box
-              color="gray.500"
-              fontWeight="semibold"
-              letterSpacing="wide"
-              fontSize="xs"
-              textTransform="uppercase"
-              ml="2"
-              noOfLines={1}
-            >
-              {property.beds} beds &bull; {property.baths} baths
-            </Box>
-          </Box>
-
-          <Box
-            mt="1"
-            fontWeight="semibold"
-            as="h4"
-            lineHeight="tight"
-            noOfLines={1}
-          >
-            {property.title}
-          </Box>
-
-          <Box>
-            {property.formattedPrice}
-            <Box as="span" color="gray.600" fontSize="sm">
-              / wk
-            </Box>
-          </Box>
-
-          <Box display="flex" mt="2" alignItems="center">
-            {Array(5)
-              .fill('')
-              .map((_, i) => (
-                <StarIcon
-                  key={i}
-                  color={i < property.rating ? 'teal.500' : 'gray.300'}
-                />
-              ))}
-            <Box as="span" ml="2" color="gray.600" fontSize="sm" noOfLines={1}>
-              {property.reviewCount} reviews
-            </Box>
-          </Box>
-        </Box>
-      </Box>
-    </Box>
-  )
-}
 // Function to generate a random color
 
 function Home() {
@@ -141,7 +66,8 @@ function Home() {
       imageUrl: url,
       imageAlt: 'food katsu',
       title: nama,
-      formattedPrice: harga
+      formattedPrice: harga,
+      kode: kode
     }
     const handleSubmit = () => {
       addOrder(property.title, property.formattedPrice, property.imageUrl, 1)
@@ -152,8 +78,13 @@ function Home() {
       const hasTitle = orders.some(order => order.nama === property.title)
       if (!hasTitle) {
         return (
-          <Button borderRadius="md" size="sm" onClick={handleSubmit}>
-            Add To Cart
+          <Button
+            borderRadius="md"
+            size="sm"
+            onClick={handleSubmit}
+            colorScheme="purple"
+          >
+            Add to Cart
           </Button>
         )
       } else {
@@ -166,7 +97,11 @@ function Home() {
     }
     return (
       <Box key={index} paddingX={{ base: 1, md: 2 }} width="100%" py={2}>
-        <Box borderWidth="2px" borderRadius="none">
+        <Box
+          borderWidth="2px"
+          borderRadius="none"
+          style={{ borderColor: 'darkgrey', borderWidth: '2px' }}
+        >
           <Box
             // Set the desired height for the image container
             borderRadius="none"
@@ -202,7 +137,7 @@ function Home() {
 
             <Box display="flex" mt="2" alignItems="center" pb={2}>
               <Box as="span" color="gray.600" fontSize="xs" noOfLines={1}>
-                {totalp} terjual
+                Kode : {kode} | Terjual : {totalp}
               </Box>
             </Box>
             {renderInputOrButton()}
@@ -220,7 +155,7 @@ function Home() {
   }
 
   const handleSubmit = () => {
-    // getCities()
+    SendEmail()
   }
 
   const [seasonal, setSeasonal] = useState([])
@@ -259,10 +194,9 @@ function Home() {
               foodCard(
                 data.nama,
                 data.harga,
-
                 data.url,
                 data.totalp,
-                data.disukai,
+                data.kode,
                 index
               )
             )}

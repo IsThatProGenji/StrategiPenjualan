@@ -22,17 +22,25 @@ const MyContextProvider = ({ children }) => {
   const getInitialOrders = () => []
   const [orders, setOrders] = useState(getInitialOrders)
   const [fullMenu, setFullMenu] = useState([])
-  const [topSeller, setTopSeller] = useState([])
-  const [favorite, setFavorite] = useState([])
   const [promo, setPromo] = useState([])
-  const [filteredItems, setFilteredItems] = useState([])
-  const [recommendationItems, setRecommendationItems] = useState([])
-  const [fullDrink, setFullDrink] = useState([])
-
+  const [emailList, setEmailList] = useState([])
   // Function to update the context state
   const app = initializeApp(firebaseConfig)
   const db = getFirestore(app)
 
+  async function GetEmailsFromOrdersCollection() {
+    const full = query(collection(db, 'order'), orderBy('nama', 'asc'))
+    const fullSnapshot = await getDocs(full)
+    const uniqueEmails = new Set()
+
+    fullSnapshot.forEach(doc => {
+      // doc.data() is never undefined for query doc snapshots
+      const email = doc.data().email
+      uniqueEmails.add(email)
+    })
+
+    setEmailList(Array.from(uniqueEmails))
+  }
   async function GetFullMenu() {
     const full = query(collection(db, 'item'), orderBy('nama', 'asc'))
     const fullSnapshot = await getDocs(full)
@@ -61,8 +69,8 @@ const MyContextProvider = ({ children }) => {
       someValue: newValue
     }))
   }
-  const addOrder = (nama, harga, url, jumlah, jenis) => {
-    const newOrder = { nama, harga, url, jumlah, jenis }
+  const addOrder = (nama, harga, url, jumlah) => {
+    const newOrder = { nama, harga, url, jumlah }
     // Step 1: Create a copy of the current orders array
     const updatedOrders = [...orders]
 
@@ -128,9 +136,10 @@ const MyContextProvider = ({ children }) => {
         calculateTotalPrice,
         GetFullMenu,
         fullMenu,
-
         promo,
-        resetOrder
+        resetOrder,
+        GetEmailsFromOrdersCollection,
+        emailList
       }}
     >
       {children}

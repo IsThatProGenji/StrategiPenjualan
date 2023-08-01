@@ -32,6 +32,7 @@ import { useDisclosure } from '@chakra-ui/react'
 import React, { useRef, useContext, useState, useEffect } from 'react'
 import NumberInput from './numberinput'
 import MyContext from './myContext'
+import submitOrder from '../firebase/clientApp'
 import { formatToRupiah } from './formatPrice'
 import firebaseConfig from './firebaseConfig'
 import { initializeApp } from 'firebase/app'
@@ -45,8 +46,6 @@ import {
   limit,
   where
 } from 'firebase/firestore'
-import Carousel from 'react-multi-carousel'
-import submitOrder from '../firebase/clientApp'
 function DrawerExample() {
   const {
     orders,
@@ -167,8 +166,6 @@ function DrawerExample() {
 
   const [formValues, setFormValues] = useState({
     nama: '',
-    noMeja: '',
-    option: 'dinein', // Default value for the "Choose an Option" select
     orderNote: '',
     email: ''
   })
@@ -180,12 +177,11 @@ function DrawerExample() {
     submitOrder({
       order: orders,
       nama: formValues.nama,
-      feedback: formValues.feedback,
-      nomeja: formValues.noMeja,
       note: formValues.orderNote,
-      opsi: formValues.option,
+      email: formValues.email,
       total: totalPrice
     })
+
     onClose()
     resetOrder([])
   }
@@ -216,13 +212,16 @@ function DrawerExample() {
   }
   return (
     <>
-      <IconButton
-        colorScheme="teal"
+      <Button
+        fontSize="16px"
+        fontWeight="bold"
+        colorScheme="purple"
         aria-label="Call Segun"
         ref={btnRef}
         onClick={onOpen}
-        icon={<LuShoppingCart />}
-      />
+      >
+        Keranjang
+      </Button>
       <Drawer
         isOpen={isOpen}
         placement="right"
@@ -237,11 +236,11 @@ function DrawerExample() {
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader borderBottomWidth="1px">Shopping Cart</DrawerHeader>
+          <DrawerHeader borderBottomWidth="1px">Keranjang</DrawerHeader>
           <DrawerBody>
             {orders.length === 0 ? ( // Check if the orders array is empty
               <Text textAlign="center" fontWeight="bold" fontSize="xl" py={6}>
-                Add Items To Your Cart First.
+                Tambahkan Barang ke Keranjang Terlebih Dahulu.
               </Text>
             ) : (
               <Stack spacing="24px" pt={3}>
@@ -249,15 +248,28 @@ function DrawerExample() {
                 {orders.map((item, index) => (
                   <OrderItem key={index} item={item} /> // Use index as the key prop
                 ))}
-                <FormLabel htmlFor="option">You May Like :</FormLabel>
 
                 <Box>
                   <FormLabel htmlFor="desc">Nama Pembeli</FormLabel>
-                  <Input name="nama" onChange={handleChange} />
+                  <Input
+                    name="nama"
+                    onChange={handleChange}
+                    style={{
+                      borderColor: 'black', // Change this to your desired border color
+                      borderWidth: '2px' // You can adjust the border width as needed // Add padding inside the input for better visual appearance (optional)
+                    }}
+                  />
                 </Box>
                 <Box>
                   <FormLabel htmlFor="desc">Email Pembeli</FormLabel>
-                  <Input name="email" onChange={handleChange} />
+                  <Input
+                    name="email"
+                    onChange={handleChange}
+                    style={{
+                      borderColor: 'black', // Change this to your desired border color
+                      borderWidth: '2px' // You can adjust the border width as needed // Add padding inside the input for better visual appearance (optional)
+                    }}
+                  />
                 </Box>
                 <Box>
                   <FormLabel htmlFor="desc"> Note</FormLabel>
@@ -265,6 +277,10 @@ function DrawerExample() {
                     id="desc"
                     name="orderNote"
                     onChange={handleChange}
+                    style={{
+                      borderColor: 'black', // Change this to your desired border color
+                      borderWidth: '2px' // You can adjust the border width as needed // Add padding inside the input for better visual appearance (optional)
+                    }}
                   />
                 </Box>
 
@@ -287,7 +303,7 @@ function DrawerExample() {
             </Button>
 
             {orders.length > 0 && (
-              <Button colorScheme="blue" onClick={submitOrderHandler}>
+              <Button colorScheme="purple" onClick={submitOrderHandler}>
                 Order
               </Button>
             )}
