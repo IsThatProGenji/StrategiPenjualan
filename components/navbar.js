@@ -82,38 +82,6 @@ const Navbar = props => {
           Admin
         </Button>
         <DrawerExample />
-        <Box ml={2} display={{ base: 'inline-block' }}>
-          <Box ml={2} display={{ base: 'inline-block', md: 'none' }}>
-            <Menu isLazy id="navbar-menu">
-              <MenuButton
-                as={IconButton}
-                icon={<HamburgerIcon />}
-                variant="outline"
-                aria-label="Options"
-              />
-              <MenuList>
-                <MenuItem as={MenuLink} href="/">
-                  About
-                </MenuItem>
-                <MenuItem as={MenuLink} href="/works">
-                  Works
-                </MenuItem>
-                <MenuItem as={MenuLink} href="/posts">
-                  Posts
-                </MenuItem>
-                <MenuItem as={MenuLink} href="https://uses.craftz.dog/">
-                  Uses
-                </MenuItem>
-                <MenuItem
-                  as={Link}
-                  href="https://github.com/craftzdog/craftzdog-homepage"
-                >
-                  View Source
-                </MenuItem>
-              </MenuList>
-            </Menu>
-          </Box>
-        </Box>
       </Container>
     </Box>
   )
